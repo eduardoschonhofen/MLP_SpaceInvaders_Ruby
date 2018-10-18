@@ -1,6 +1,8 @@
 class Player
   def initialize()
     @image=Gosu::Image.new("./assets/textures/seiya.jpg",false)
+    @beep = Gosu::Sample.new("./assets/textures/Beep.wav")
+
     @x=@y=@vel_x=@vel_y=@angle=0.0
     @score=0
   end
@@ -20,6 +22,8 @@ class Player
     @vel_y+=Gosu::offset_y(@angle,0.5)
   end
   def move
+
+
     @x+=@vel_x
     @y+=@vel_y
     @x %=640
@@ -32,4 +36,17 @@ class Player
     @image.draw_rot(@x,@y,1,@angle)
   end
 
+  def score
+    @score
+  end
+
+  def collect_stars(stars)
+    if stars.reject!{|star| Gosu::distance(@x,@y,star.x,star.y)<35} then
+      @score+=1
+      @beep.play
+      true
+    else
+      false
+    end
+  end
 end
