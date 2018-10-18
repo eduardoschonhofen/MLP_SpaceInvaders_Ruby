@@ -1,11 +1,11 @@
 require_relative 'Definitions'
 require_relative 'Texture'
 require_relative 'Movement'
-class Shoot
+class Enemy
   def initialize
-    @texturePath='./assets/textures/shoot.png'
+    @texturePath='./assets/textures/tie.png'
     @Texture = Texture.new(@texturePath,0.05,0.05)
-    @speed,@x,@y=1.5,Definitions::RES_WIDTH-350,100
+    @speed,@x,@y=1.5,Definitions::RES_WIDTH-200,100
     @Movement=Movement.new(@speed,@x,@y)
   end
 
@@ -17,6 +17,8 @@ class Shoot
   end
 
   def draw
-    @Texture.drawRotacionado(@Movement.x,@Movement.y,(9/36)*6.28)
+    @Texture.draw(@Movement.x,@Movement.y)
   end
+
+
 end

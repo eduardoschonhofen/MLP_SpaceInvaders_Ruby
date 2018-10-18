@@ -1,0 +1,18 @@
+Texturas estão em assets/textures
+Textura inimigo:tie.png
+Textura Player:xwing.png
+Textura Tiro:shoot.png
+Textura fundo:goku.jpg
+
+
+Temos as classes Player,Enemy e Shoot.
+
+São compostas por um objeto Movement e Texture, utilizados para controlar o Movimento desta classe e suas operações
+de desenho da textura.
+
+A Classe Game(Main) está controlando o jogo atualmente
+
+
+ZOrder,Star foram utililizados no tutorial e só estão ali para exemplo de como usar a Gosu
+
+Módulo Definitions irá conter constantes úteis para o programar.

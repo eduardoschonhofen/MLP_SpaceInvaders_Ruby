@@ -1,48 +1,23 @@
 require_relative 'Definitions'
+require_relative 'Texture'
+require_relative 'Movement'
 class Player
-
-
-
-  def initialize()
-    @animation=Gosu::Image::load_tiles("./assets/textures/ships.png",256,260,{})
-    @image=@animation[0]
-    @beep = Gosu::Sample.new("./assets/textures/Beep.wav")
-
-    @x=@y=@vel_x=@vel_y=@angle=0.0
-    @score=0
-    @speed=0.15
-
-    @RES_WIDTH=Definitions.RES_WIDTH
-    @RES_HEIGHT=Definitions.HEIGHT
+  def initialize
+    @texturePath='./assets/textures/xwing.png'
+    @Texture = Texture.new(@texturePath,0.175,0.175)
+    @speed,@x,@y=1.5,Definitions::RES_WIDTH,Definitions::RES_HEIGHT-100
+    @Movement=Movement.new(@speed,@x,@y)
   end
 
-  def warp(x,y)
-    @x,@y=x,y
+  def MoveLeft
+    @Movement.left
   end
-
-  def left
-    @vel_x-=@speed
-  end
-  def right
-    @vel_x+=@speed
-  end
-
-
-  def move
-    @x+=@vel_x
-    @y+=@vel_y
-    @x %=@RES_WIDTH
-    @y %=@RES_HEIGHT
-    @vel_x *= 0.95
-    @vel_y*=0.95
+  def MoveRight
+    @Movement.right
   end
 
   def draw
-    @image.draw(@x,@y,1,0.35,0.35)
-  end
-
-  def score
-    @score
+    @Texture.draw(@Movement.x,@Movement.y)
   end
 
   def collect_stars(stars)

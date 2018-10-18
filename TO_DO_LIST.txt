@@ -1,0 +1,23 @@
+Tiros
+1.Instanciar tiros do jogador corretamente
+2.Testar colisão dos tiros
+3.Instanciar tiros do inimigo
+
+Inimigos
+1.Instanciar todos inimigos corretamente
+2.Gerenciar movimentação dos inimigos.
+3.Instanciar tiros do inimigo
+
+Escudo
+1.Criar classe do escudo
+2.Instanciar escudos corretamente
+3.Gerenciar vida do escudo
+
+Geral
+1.Criar score
+2.Criar GameOver
+3.Criar Menu Inicial
+
+
+Bugs: Classe Texture, fazer a DrawTextureRotacionado funcionar para o tiro
+(o arquivo da textura do tiro está de lado, queremos renderizar ela inclinada 90 graus)
