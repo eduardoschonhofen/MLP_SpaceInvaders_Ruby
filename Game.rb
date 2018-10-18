@@ -62,3 +62,5 @@ end
 
 window=GameWindow.new()
 window.show
+
+puts "AAA"
