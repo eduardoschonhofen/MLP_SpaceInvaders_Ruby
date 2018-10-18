@@ -1,39 +1,44 @@
+require_relative 'Definitions'
 class Player
+
+
+
   def initialize()
-    @image=Gosu::Image.new("./assets/textures/seiya.jpg",false)
+    @animation=Gosu::Image::load_tiles("./assets/textures/ships.png",256,260,{})
+    @image=@animation[0]
     @beep = Gosu::Sample.new("./assets/textures/Beep.wav")
 
     @x=@y=@vel_x=@vel_y=@angle=0.0
     @score=0
+    @speed=0.15
+
+    @RES_WIDTH=Definitions.RES_WIDTH
+    @RES_HEIGHT=Definitions.HEIGHT
   end
 
   def warp(x,y)
     @x,@y=x,y
   end
-  def turn_left
-    @angle-=4.5
+
+  def left
+    @vel_x-=@speed
   end
-  def turn_right
-    @angle+=4.5
+  def right
+    @vel_x+=@speed
   end
 
-  def accelerate
-    @vel_x+=Gosu::offset_x(@angle,0.5)
-    @vel_y+=Gosu::offset_y(@angle,0.5)
-  end
+
   def move
-
-
     @x+=@vel_x
     @y+=@vel_y
-    @x %=640
-    @y %=480
+    @x %=@RES_WIDTH
+    @y %=@RES_HEIGHT
     @vel_x *= 0.95
     @vel_y*=0.95
   end
 
   def draw
-    @image.draw_rot(@x,@y,1,@angle)
+    @image.draw(@x,@y,1,0.35,0.35)
   end
 
   def score

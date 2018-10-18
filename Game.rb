@@ -25,14 +25,12 @@ class GameWindow < Gosu::Window
   def update
 
     if button_down? Gosu::KbLeft or button_down Gosu::GpLeft then
-      @player.turn_left
+      @player.left
     end
     if button_down? Gosu::KbRight or button_down Gosu::GpRight then
-      @player.turn_right
+      @player.right
     end
-    if button_down? Gosu::KbUp or button_down Gosu::GpUp then
-      @player.accelerate
-    end
+
     @player.move
 
     @player.collect_stars(@stars)
@@ -62,5 +60,3 @@ end
 
 window=GameWindow.new()
 window.show
-
-puts "AAA"
