@@ -1,7 +1,7 @@
 class Movement
-  attr_accessor :x, :y
-  def initialize(speed,x,y)
-    @speed,@x,@y=speed,x,y
+  attr_accessor :x, :y, :width, :height
+  def initialize(speed, x, y, width, height)
+    @speed, @x, @y, @width, @height = speed, x, y, width, height
   end
 
   def warp(x,y)
@@ -16,5 +16,12 @@ class Movement
     @x+=@speed
   end
 
-end
+  def top
+    @y-=@speed
+  end
 
+  def down
+    @y+=@speed
+  end
+
+end

@@ -1,10 +1,4 @@
 module Definitions
-
-  RES_WIDTH=640
-  RES_HEIGHT=480
-
-
-
-
-
+  RES_WIDTH = 800
+  RES_HEIGHT = 600
 end

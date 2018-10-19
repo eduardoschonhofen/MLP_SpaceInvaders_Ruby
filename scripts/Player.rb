@@ -2,11 +2,14 @@ require_relative 'Definitions'
 require_relative 'Texture'
 require_relative 'Movement'
 class Player
+  attr_accessor :Movement
+
   def initialize
     @texturePath='./assets/textures/xwing.png'
-    @Texture = Texture.new(@texturePath,0.175,0.175)
-    @speed,@x,@y=1.5,Definitions::RES_WIDTH,Definitions::RES_HEIGHT-100
-    @Movement=Movement.new(@speed,@x,@y)
+    @Texture = Texture.new(@texturePath, 0.1, 0.1)
+    @speed,@x,@y= 2,Definitions::RES_WIDTH/2,Definitions::RES_HEIGHT-80
+    @width, @height = 64, 64
+    @Movement=Movement.new(@speed, @x, @y, @width, @height)
   end
 
   def MoveLeft
