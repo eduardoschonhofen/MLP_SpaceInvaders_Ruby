@@ -20,7 +20,8 @@ class GameWindow < Gosu::Window
 
     super Definitions::RES_WIDTH, Definitions::RES_HEIGHT,false
     self.caption= "Space Invaders MLP"
-
+    @tela_inicial = true
+    @font = Gosu::Font.new(self, "assets/textures/victor-pixel.ttf", 40)
     @background_image = Gosu::Image.new("./assets/textures/goku.jpg",tileable=false)
     @player=Player.new()
     @enemy=Enemy.new()
@@ -30,53 +31,65 @@ class GameWindow < Gosu::Window
    # @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
   end
   def update
-    if @player_shoot != nil and @enemy != nil
-      if collision?(@player_shoot, @enemy)
-        @enemy = nil
-        @player_shoot = nil
+    unless @tela_inicial
+      if @player_shoot != nil and @enemy != nil
+        if collision?(@player_shoot, @enemy)
+          @enemy = nil
+          @player_shoot = nil
+        end
+      end
+
+      # Atualiza o tiro do player
+      if @player_shoot != nil
+        @player_shoot.MoveTop
+
+        if @player_shoot.out?
+          @player_shoot = nil
+        end
+      end
+
+      if button_down? Gosu::KbSpace and @player_shoot == nil
+        @player_shoot = Shoot.new(@player.Movement)
+      end
+
+      if button_down? Gosu::KbLeft or button_down Gosu::GpLeft then
+        @player.MoveLeft
+      end
+      if button_down? Gosu::KbRight or button_down Gosu::GpRight then
+        @player.MoveRight
       end
     end
-
-    # Atualiza o tiro do player
-    if @player_shoot != nil
-      @player_shoot.MoveTop
-
-      if @player_shoot.out?
-        @player_shoot = nil
-      end
-    end
-
-    if button_down? Gosu::KbSpace and @player_shoot == nil
-      @player_shoot = Shoot.new(@player.Movement)
-    end
-
-    if button_down? Gosu::KbLeft or button_down Gosu::GpLeft then
-      @player.MoveLeft
-    end
-    if button_down? Gosu::KbRight or button_down Gosu::GpRight then
-      @player.MoveRight
-    end
-
   end
 
   def draw
+    unless @tela_inicial
+      #@background_image.draw(0,0,0)
+      @player.draw
 
-    #@background_image.draw(0,0,0)
-    @player.draw
+      if @enemy != nil
+        @enemy.draw
+      end
 
-    if @enemy != nil
-      @enemy.draw
+      if @player_shoot != nil
+        @player_shoot.draw
+      end
     end
-
-    if @player_shoot != nil
-      @player_shoot.draw
-    end
-
+    return unless @tela_inicial
+      @font.draw_text("SPACE INVADERS", 50, 170, 50, 2.0, 2.0, Gosu::Color::GREEN)
+      @font.draw_text("press space to play", 150, 280, 50, 1, 1, Gosu::Color::BLUE)
+      @font.draw_text("MADE BY:", 50, 400, 50, 0.7, 0.7, Gosu::Color::WHITE)
+      @font.draw_text("Cassiano Bruckhoff", 50, 430, 50, 0.7, 0.7, Gosu::Color::WHITE)
+      @font.draw_text("Eduardo Schonhofen", 50, 460, 50, 0.7, 0.7, Gosu::Color::WHITE)
+      @font.draw_text("Giovani Tirello", 50, 490, 50, 0.7, 0.7, Gosu::Color::WHITE)
   end
 
   def button_down(id)
     if id==Gosu::KbEscape
       close
+    end
+    return unless @tela_inicial
+    if id==Gosu::KbSpace
+      @tela_inicial = false
     end
   end
 end
