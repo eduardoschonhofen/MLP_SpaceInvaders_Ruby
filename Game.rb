@@ -5,6 +5,7 @@ require_relative "scripts/Star"
 require_relative "scripts/ZOrder"
 require_relative "scripts/Shoot"
 require_relative 'scripts/Enemy'
+require_relative 'scripts/Blocks'
 
 require_relative 'scripts/Collision.rb'
 class Game
@@ -25,6 +26,24 @@ class GameWindow < Gosu::Window
     @background_image = Gosu::Image.new("./assets/textures/goku.jpg",tileable=false)
     @player=Player.new()
     @enemy=Enemy.new()
+
+    #@blocks= Blocks.new()
+    @blocks=Array.new(20)
+    @j = 0
+    @conj_blocos = 3
+    @dist_conj = 0
+
+    until @j > @conj_blocos do
+      @blocks[0+@j*5]=Blocks.new(100+@dist_conj,400)
+      @blocks[1+@j*5]=Blocks.new(100+@dist_conj,432)
+      @blocks[2+@j*5]=Blocks.new(132+@dist_conj,400)
+      @blocks[3+@j*5]=Blocks.new(164+@dist_conj,400)
+      @blocks[4+@j*5]=Blocks.new(164+@dist_conj,432)
+      @dist_conj = @dist_conj + 175
+      @j+=1
+    end
+
+
     @player_shoot = nil
     #@star_anim=Gosu::Image::load_tiles(self,"./assets/textures/Star.png",25,25,tileable=false)
    # @stars=Array.new
@@ -38,6 +57,19 @@ class GameWindow < Gosu::Window
           @player_shoot = nil
         end
       end
+
+      @num_blocks = 0
+      until @num_blocks > 19 do
+        if @player_shoot != nil and @blocks[@num_blocks] != nil
+          if collision?(@player_shoot, @blocks[@num_blocks])
+            @blocks[@num_blocks] = nil
+            @player_shoot = nil
+          end
+        end
+        @num_blocks+=1
+      end
+
+
 
       # Atualiza o tiro do player
       if @player_shoot != nil
@@ -69,6 +101,17 @@ class GameWindow < Gosu::Window
       if @enemy != nil
         @enemy.draw
       end
+
+      @k = 0
+
+      until @k > 19 do
+        if @blocks[@k] != nil
+          @blocks[@k].draw
+        end
+        @k+=1
+      end
+
+
 
       if @player_shoot != nil
         @player_shoot.draw
