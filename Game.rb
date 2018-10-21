@@ -6,6 +6,7 @@ require_relative "scripts/ZOrder"
 require_relative "scripts/Shoot"
 require_relative 'scripts/Enemy'
 require_relative 'scripts/Blocks'
+require_relative 'scripts/Aliens'
 
 require_relative 'scripts/Collision.rb'
 class Game
@@ -32,7 +33,6 @@ class GameWindow < Gosu::Window
     @j = 0
     @conj_blocos = 3
     @dist_conj = 0
-
     until @j > @conj_blocos do
       @blocks[0+@j*5]=Blocks.new(100+@dist_conj,400)
       @blocks[1+@j*5]=Blocks.new(100+@dist_conj,432)
@@ -42,6 +42,16 @@ class GameWindow < Gosu::Window
       @dist_conj = @dist_conj + 175
       @j+=1
     end
+
+    @aliens=Array.new(11)
+    @k = 0
+    @dist_aliens = 0
+    until @k > 10 do
+      @aliens[@k]=Aliens.new(75+@dist_aliens, 200)
+      @dist_aliens = @dist_aliens + 60
+      @k+=1
+    end
+
 
 
     @player_shoot = nil
@@ -69,6 +79,47 @@ class GameWindow < Gosu::Window
         @num_blocks+=1
       end
 
+      @num_aliens = 0
+
+      if(@move_left >= 100 && @move_down2 >= 21)
+        @move_left = 0
+        @move_right = 0
+        @move_down = 0
+        @move_down2 = 0
+      end
+
+      if(@move_left >= 100 && @move_down2 <= 20)
+        until @num_aliens > 10 do
+          @aliens[@num_aliens].MoveDown
+          @num_aliens+=1
+        end
+        @move_down2 += 1
+      end
+
+      if @move_right < 100
+        until @num_aliens > 10 do
+          @aliens[@num_aliens].MoveRight
+          @num_aliens+=1
+        end
+        @move_right += 1
+      end
+
+      if @move_right >= 100 && @move_down <= 20
+        until @num_aliens > 10 do
+          @aliens[@num_aliens].MoveDown
+          @num_aliens+=1
+        end
+        @move_down+=1
+      end
+
+      if @move_right >= 20 && @move_down >= 21
+        until @num_aliens > 10 do
+          @aliens[@num_aliens].MoveLeft
+          @num_aliens+=1
+        end
+        @move_left += 1
+      end
+
 
 
       # Atualiza o tiro do player
@@ -91,6 +142,11 @@ class GameWindow < Gosu::Window
         @player.MoveRight
       end
     end
+    return unless @tela_inicial
+    @move_down = 0
+    @move_down2 = 0
+    @move_left = 0
+    @move_right = 0
   end
 
   def draw
@@ -102,15 +158,20 @@ class GameWindow < Gosu::Window
         @enemy.draw
       end
 
-      @k = 0
+      @j = 0
 
-      until @k > 19 do
-        if @blocks[@k] != nil
-          @blocks[@k].draw
+      until @j > 19 do
+        if @blocks[@j] != nil
+          @blocks[@j].draw
         end
-        @k+=1
+        @j+=1
       end
 
+      @k = 0
+      until @k > 10 do
+        @aliens[@k].draw
+        @k+=1
+      end
 
 
       if @player_shoot != nil
