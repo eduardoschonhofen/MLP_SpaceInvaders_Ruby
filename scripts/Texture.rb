@@ -1,6 +1,7 @@
 require_relative 'Definitions'
 
 class Texture
+  attr_accessor :texture
   def initialize(path,scaleX,scaleY)
     @RES_WIDTH=Definitions::RES_WIDTH
     @RES_HEIGHT=Definitions::RES_HEIGHT

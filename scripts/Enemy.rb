@@ -8,7 +8,7 @@ class Enemy
     @texturePath='./assets/textures/tie.png'
     @Texture = Texture.new(@texturePath, 0.05, 0.05)
     @speed,@x,@y=1.5,Definitions::RES_WIDTH/2, 50
-    @width, @height = 64, 64
+    @width, @height = @Texture.texture.width*0.05,@Texture.texture.height*0.05
     @Movement=Movement.new(@speed, @x, @y, @width, @height)
   end
 
