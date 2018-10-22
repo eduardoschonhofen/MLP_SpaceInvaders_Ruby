@@ -113,7 +113,9 @@ class Game< Gosu::Window
   def draw_Enemys
     @k = 0
     until @k >= @totalEnemys do
-      @enemys[@k].draw
+      if @enemys[@k]!= nil
+        @enemys[@k].draw
+      end
       @k += 1
     end
   end
@@ -163,7 +165,9 @@ class Game< Gosu::Window
 
     if (@move_left >= 100 && @move_down2 <= 20)
       until @num_enemys >= @totalEnemys do
-        @enemys[@num_enemys].MoveDown
+        if(@enemys[@num_enemys]) != nil
+          @enemys[@num_enemys].MoveDown
+        end
         @num_enemys += 1
       end
       @move_down2 += 1
@@ -171,7 +175,9 @@ class Game< Gosu::Window
 
     if @move_right < 100
       until @num_enemys >= @totalEnemys do
-        @enemys[@num_enemys].MoveRight
+        if(@enemys[@num_enemys]) != nil
+          @enemys[@num_enemys].MoveRight
+        end
         @num_enemys += 1
       end
       @move_right += 1
@@ -179,15 +185,19 @@ class Game< Gosu::Window
 
     if @move_right >= 100 && @move_down <= 20
       until @num_enemys >= @totalEnemys do
-        @enemys[@num_enemys].MoveDown
-        @num_enemys += 1
+        if(@enemys[@num_enemys]) != nil
+          @enemys[@num_enemys].MoveDown
+        end
+          @num_enemys += 1
       end
       @move_down += 1
     end
 
     if @move_right >= 20 && @move_down >= 21
       until @num_enemys >= @totalEnemys do
-        @enemys[@num_enemys].MoveLeft
+        if(@enemys[@num_enemys]) != nil
+          @enemys[@num_enemys].MoveLeft
+        end
         @num_enemys += 1
       end
       @move_left += 1
