@@ -24,6 +24,7 @@ class Game< Gosu::Window
     super Definitions::RES_WIDTH, Definitions::RES_HEIGHT,false
     self.caption= "Space Invaders MLP"
     @tela_inicial = true
+    @gameover = false
     @font = Gosu::Font.new(self, "assets/textures/victor-pixel.ttf", 40)
     @player=Player.new()
     @background=Background.new()
@@ -68,7 +69,7 @@ class Game< Gosu::Window
     end
   end
   def update
-    unless @tela_inicial
+    unless @tela_inicial || @gameover
       Shoot_Enemy_Collision()
 
       Shoot_Block_Collision()
@@ -94,7 +95,7 @@ class Game< Gosu::Window
   end
 
   def draw
-    unless @tela_inicial
+    unless @tela_inicial || @gameover
       #@background_image.draw(0,0,0)
       @player.draw
 
@@ -117,13 +118,19 @@ class Game< Gosu::Window
         @enemy_shoot.draw
       end
     end
-    return unless @tela_inicial
+    return unless @tela_inicial || @gameover
+    if @tela_inicial
       @font.draw_text("SPACE INVADERS", 50, 170, 50, 2.0, 2.0, Gosu::Color::GREEN)
       @font.draw_text("press space to play", 150, 280, 50, 1, 1, Gosu::Color::BLUE)
       @font.draw_text("MADE BY:", 50, 400, 50, 0.7, 0.7, Gosu::Color::WHITE)
       @font.draw_text("Cassiano Bruckhoff", 50, 430, 50, 0.7, 0.7, Gosu::Color::WHITE)
       @font.draw_text("Eduardo Schonhofen", 50, 460, 50, 0.7, 0.7, Gosu::Color::WHITE)
       @font.draw_text("Giovani Tirello", 50, 490, 50, 0.7, 0.7, Gosu::Color::WHITE)
+    end
+    if @gameover
+      @font.draw_text("GAME OVER", 50, 170, 50, 3.0, 3.0, Gosu::Color::GREEN)
+      @font.draw_text("press esc to exit", 170, 280, 50, 1, 1, Gosu::Color::BLUE)
+    end
   end
 
   def button_down(id)
@@ -259,7 +266,7 @@ class Game< Gosu::Window
     if @enemy_shoot != nil
       if collision?(@enemy_shoot,@player)
         @enemy_shoot=nil
-        exit
+        @gameover = true
       end
     end
   end
