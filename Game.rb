@@ -34,7 +34,11 @@ class Game< Gosu::Window
     StartEnemys()
     @player_shoot = nil
     @enemy_shoot = nil
-
+    @playerShootSound=Gosu::Sample.new("assets/audios/playerfire.wav")
+    @enemyShootSound=Gosu::Sample.new("assets/audios/enemyfire.wav")
+    @soundtrack=Gosu::Song.new("assets/audios/soundtrack.ogg")
+    @soundtrack.volume=0.2
+    @soundtrack.play(true)
 
   end
 
@@ -59,6 +63,7 @@ class Game< Gosu::Window
       while enemy==nil
         enemy=@enemys.sample
       end
+      @enemyShootSound.play(volume=0.125)
       @enemy_shoot=EnemyShoot.new(enemy.Movement)
     end
   end
@@ -156,6 +161,7 @@ class Game< Gosu::Window
   def Player_Controls
     if button_down? Gosu::KbSpace and @player_shoot == nil
       @player_shoot = Shoot.new(@player.Movement)
+      @playerShootSound.play(volume=0.2)
     end
 
     if button_down? Gosu::KbLeft or button_down Gosu::GpLeft then
