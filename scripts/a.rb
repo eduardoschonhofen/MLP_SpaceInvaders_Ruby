@@ -1,27 +1,22 @@
 require_relative 'Definitions'
 require_relative 'Texture'
 require_relative 'Movement'
-class Aliens
+class Enemy
   attr_accessor :Movement
 
-  def initialize(x,y)
+  def initialize
     @texturePath='./assets/textures/tie.png'
-    @Texture = Texture.new(@texturePath, 0.025, 0.025)
-    @width, @height = 32, 32
-    @x,@y = x, y
-    @Movement=Movement.new(1, @x, @y, @width, @height)
+    @Texture = Texture.new(@texturePath, 0.05, 0.05)
+    @speed,@x,@y=1.5,Definitions::RES_WIDTH/2, 50
+    @width, @height = @Texture.texture.width,@Texture.texture.height
+    @Movement=Movement.new(@speed, @x, @y, @width*0.05, @height*0.05)
   end
 
   def MoveLeft
     @Movement.left
   end
-
   def MoveRight
     @Movement.right
-  end
-
-  def MoveDown
-    @Movement.down
   end
 
   def draw

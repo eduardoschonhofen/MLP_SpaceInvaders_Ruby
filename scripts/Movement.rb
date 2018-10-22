@@ -1,5 +1,5 @@
 class Movement
-  attr_accessor :x, :y, :width, :height
+  attr_accessor :x, :y, :width, :height, :speed
   def initialize(speed, x, y, width, height)
     @speed, @x, @y, @width, @height = speed, x, y, width, height
   end

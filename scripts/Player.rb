@@ -8,7 +8,7 @@ class Player
     @texturePath='./assets/textures/xwing.png'
     @Texture = Texture.new(@texturePath, 0.1, 0.1)
     @speed,@x,@y= 2,Definitions::RES_WIDTH/2,Definitions::RES_HEIGHT-80
-    @width, @height = 64, 64
+    @width, @height = @Texture.texture.width*0.1,@Texture.texture.height*0.1
     @Movement=Movement.new(@speed, @x, @y, @width, @height)
   end
 

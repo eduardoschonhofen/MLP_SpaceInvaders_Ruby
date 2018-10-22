@@ -4,19 +4,24 @@ require_relative 'Movement'
 class Enemy
   attr_accessor :Movement
 
-  def initialize
+  def initialize(x,y)
     @texturePath='./assets/textures/tie.png'
-    @Texture = Texture.new(@texturePath, 0.05, 0.05)
-    @speed,@x,@y=1.5,Definitions::RES_WIDTH/2, 50
-    @width, @height = @Texture.texture.width*0.05,@Texture.texture.height*0.05
-    @Movement=Movement.new(@speed, @x, @y, @width, @height)
+    @Texture = Texture.new(@texturePath, 0.025, 0.025)
+    @width, @height = @Texture.texture.width,@Texture.texture.height
+    @x,@y = x, y
+    @Movement=Movement.new(0.5, @x, @y, @width*0.025, @height*0.025)
   end
 
   def MoveLeft
     @Movement.left
   end
+
   def MoveRight
     @Movement.right
+  end
+
+  def MoveDown
+    @Movement.down
   end
 
   def draw

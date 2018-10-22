@@ -7,7 +7,7 @@ class Blocks
   def initialize(x,y)
     @texturePath='./assets/textures/block.jpg'
     @Texture = Texture.new(@texturePath, 0.5, 0.5)
-    @width, @height = 32, 32
+    @width, @height = @Texture.texture.width*0.5,@Texture.texture.height*0.5
     @x,@y = x, y
     @Movement=Movement.new(1.5, @x, @y, @width, @height)
   end
