@@ -16,8 +16,8 @@ class Texture
     @texture.draw(x,y,1,@scaleX,@scaleY)
   end
 
-  def drawRotacionado(x,y,angle)
-    @texture.draw_rot(angle=angle,x=x,y=y,z=1,scale_x=@scaleX,scale_y=@scaleY)
+  def drawBackground(x,y)
+    @texture.draw(x,y,0,@scaleX,@scaleY)
   end
 
 end

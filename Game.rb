@@ -10,6 +10,8 @@ require_relative 'scripts/Blocks'
 
 require_relative 'scripts/Collision'
 require_relative 'scripts/GlobalCollision'
+require_relative 'scripts/EnemyShoot'
+require_relative 'scripts/Background'
 include Collision
 
 
@@ -24,12 +26,14 @@ class Game< Gosu::Window
     @tela_inicial = true
     @font = Gosu::Font.new(self, "assets/textures/victor-pixel.ttf", 40)
     @player=Player.new()
+    @background=Background.new()
     @totalEnemys=30
     @totalBlocks=19
 
     StartBlocks()
     StartEnemys()
     @player_shoot = nil
+    @enemy_shoot = nil
 
 
   end
@@ -49,18 +53,33 @@ class Game< Gosu::Window
       @k += 1
     end
   end
-
+  def Enemy_Attack()
+    if @enemy_shoot==nil
+      enemy=@enemys.sample
+      while enemy==nil
+        enemy=@enemys.sample
+      end
+      @enemy_shoot=EnemyShoot.new(enemy.Movement)
+    end
+  end
   def update
     unless @tela_inicial
       Shoot_Enemy_Collision()
 
       Shoot_Block_Collision()
 
+      Enemy_Shoot_Block_Collision()
+      Enemy_Shoot_Player_Collision()
+
       Move_Enemys()
 
       Move_Player_Shoot()
 
+      Move_Enemy_Shoot()
+
       Player_Controls()
+
+      Enemy_Attack()
     end
     return unless @tela_inicial
     @move_down = 0
@@ -83,10 +102,14 @@ class Game< Gosu::Window
       draw_Blocks()
 
       draw_Enemys()
+      @background.draw()
 
 
       if @player_shoot != nil
         @player_shoot.draw
+      end
+      if @enemy_shoot != nil
+        @enemy_shoot.draw
       end
     end
     return unless @tela_inicial
@@ -153,6 +176,17 @@ class Game< Gosu::Window
     end
   end
 
+  def Move_Enemy_Shoot()
+    if @enemy_shoot != nil
+      @enemy_shoot.MoveDown
+
+      if @enemy_shoot.out?
+        @enemy_shoot = nil
+      end
+    end
+  end
+
+
   def Move_Enemys
     @num_enemys = 0
 
@@ -203,7 +237,26 @@ class Game< Gosu::Window
       @move_left += 1
     end
   end
-
+  def Enemy_Shoot_Block_Collision()
+    @num_blocks = 0
+    until @num_blocks > @totalBlocks do
+      if @enemy_shoot != nil and @blocks[@num_blocks] != nil
+        if collision?(@enemy_shoot, @blocks[@num_blocks])
+          @blocks[@num_blocks] = nil
+          @enemy_shoot = nil
+        end
+      end
+      @num_blocks += 1
+    end
+  end
+  def Enemy_Shoot_Player_Collision()
+    if @enemy_shoot != nil
+      if collision?(@enemy_shoot,@player)
+        @enemy_shoot=nil
+        exit
+      end
+    end
+  end
   def Shoot_Block_Collision
     @num_blocks = 0
     until @num_blocks > @totalBlocks do
