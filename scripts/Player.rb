@@ -23,13 +23,4 @@ class Player
     @Texture.draw(@Movement.x,@Movement.y)
   end
 
-  def collect_stars(stars)
-    if stars.reject!{|star| Gosu::distance(@x,@y,star.x,star.y)<35} then
-      @score+=1
-      @beep.play
-      true
-    else
-      false
-    end
-  end
 end

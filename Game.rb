@@ -1,8 +1,5 @@
 require 'gosu'
 require_relative "scripts/Player"
-require_relative "scripts/Star"
-
-require_relative "scripts/ZOrder"
 require_relative "scripts/Shoot"
 require_relative 'scripts/Enemy'
 require_relative 'scripts/Blocks'
