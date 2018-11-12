@@ -17,6 +17,7 @@ class Texture
   end
 
   def drawBackground(x,y)
+
     @texture.draw(x,y,0,@scaleX,@scaleY)
   end
 

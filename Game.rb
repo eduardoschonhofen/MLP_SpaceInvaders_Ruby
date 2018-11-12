@@ -9,6 +9,7 @@ require_relative 'scripts/Collision'
 require_relative 'scripts/GlobalCollision'
 require_relative 'scripts/EnemyShoot'
 require_relative 'scripts/Background'
+require_relative 'scripts/EnemyHandle'
 include Collision
 
 
@@ -25,46 +26,22 @@ class Game< Gosu::Window
     @font = Gosu::Font.new(self, "assets/textures/victor-pixel.ttf", 40)
     @player=Player.new()
     @background=Background.new()
-    @totalEnemys=30
     @totalBlocks=19
 
     StartBlocks()
-    StartEnemys()
+
+    Enemys=new EnemyHandle()
+
     @player_shoot = nil
     @enemy_shoot = nil
-    @playerShootSound=Gosu::Sample.new("assets/audios/playerfire.wav")
-    @enemyShootSound=Gosu::Sample.new("assets/audios/enemyfire.wav")
     @soundtrack=Gosu::Song.new("assets/audios/soundtrack.ogg")
     @soundtrack.volume=0.2
     @soundtrack.play(true)
 
   end
 
-  def StartEnemys
-    @enemys = Array.new(@totalEnemys)
-    @k = 0
-    y=-50
-    @dist_enemys = 0
-    until @k >= @totalEnemys do
-      if((@k)%10==0)
-        y=y+75
-        @dist_enemys=0
-      end
-      @enemys[@k] = Enemy.new(75 + @dist_enemys, y)
-      @dist_enemys = @dist_enemys + 60
-      @k += 1
-    end
-  end
-  def Enemy_Attack()
-    if @enemy_shoot==nil
-      enemy=@enemys.sample
-      while enemy==nil
-        enemy=@enemys.sample
-      end
-      @enemyShootSound.play(volume=0.125)
-      @enemy_shoot=EnemyShoot.new(enemy.Movement)
-    end
-  end
+
+
   def update
     unless @tela_inicial || @gameover
       Shoot_Enemy_Collision()
@@ -165,7 +142,6 @@ class Game< Gosu::Window
   def Player_Controls
     if button_down? Gosu::KbSpace and @player_shoot == nil
       @player_shoot = Shoot.new(@player.Movement)
-      @playerShootSound.play(volume=0.2)
     end
 
     if button_down? Gosu::KbLeft or button_down Gosu::GpLeft then

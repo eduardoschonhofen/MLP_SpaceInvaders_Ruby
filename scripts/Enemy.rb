@@ -1,31 +1,15 @@
 require_relative 'Definitions'
 require_relative 'Texture'
 require_relative 'Movement'
-class Enemy
+require_relative 'GameObject'
+class Enemy < GameObject
   attr_accessor :Movement
 
   def initialize(x,y)
     @texturePath='./assets/textures/tie.png'
-    @Texture = Texture.new(@texturePath, 0.025, 0.025)
-    @width, @height = @Texture.texture.width,@Texture.texture.height
-    @x,@y = x, y
-    @Movement=Movement.new(0.5, @x, @y, @width*0.025, @height*0.025)
-  end
+    @speed=0.5
+    @scaleX,@scaleY=0.025,0.025
 
-  def MoveLeft
-    @Movement.left
+    super(x,y)
   end
-
-  def MoveRight
-    @Movement.right
-  end
-
-  def MoveDown
-    @Movement.down
-  end
-
-  def draw
-    @Texture.draw(@Movement.x,@Movement.y)
-  end
-
 end
