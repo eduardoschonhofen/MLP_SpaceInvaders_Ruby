@@ -39,6 +39,7 @@ class GlobalCollision
       if collision?(enemy_shoot,@player)
         enemy_shoot.die
         @gameover = true
+        raise
       end
     end
   end

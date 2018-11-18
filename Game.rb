@@ -50,6 +50,7 @@ class Game< Gosu::Window
       @global_collision.Enemy_Shoot_Player_Collision(@enemy_shoot)
 
 
+
       @enemys.Move_Enemys()
       @player_shoot.move()
       @enemy_shoot.move()
@@ -63,6 +64,10 @@ class Game< Gosu::Window
     @move_down2 = 0
     @move_left = 0
     @move_right = 0
+
+
+  rescue
+    @gameover=true
   end
 
   def draw
