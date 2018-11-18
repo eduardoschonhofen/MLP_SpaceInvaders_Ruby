@@ -69,19 +69,19 @@ class EnemyHandle
   def moveBaixo
     for enemy in @enemys
       for i in 0..10
-      enemy.MoveDown
+      enemy.moveDown
       end
       end
   end
   def moveEsquerda
     for enemy in @enemys
-      enemy.MoveLeft
+      enemy.moveLeft
     end
   end
   def moveDireita
 
     for enemy in @enemys
-      enemy.MoveRight
+      enemy.moveRight
     end
   end
 

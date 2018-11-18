@@ -24,19 +24,19 @@ class GameObject
 
 
 
-  def MoveLeft
+  def moveLeft
     @Movement.left
   end
 
-  def MoveRight
+  def moveRight
     @Movement.right
   end
 
-  def MoveDown
+  def moveDown
     @Movement.down
   end
 
-  def MoveTop
+  def moveTop
     @Movement.top
   end
   def draw
@@ -59,6 +59,16 @@ class GameObject
 
   def isAlive?()
     return @alive
+  end
+
+  def move()
+    if isAlive?
+      moveTop
+
+      if out?
+        die
+      end
+    end
   end
 
 

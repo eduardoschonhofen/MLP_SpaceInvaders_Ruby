@@ -14,4 +14,15 @@ class EnemyShoot<GameObject
     @alive=alive
       end
   end
+
+  def move()
+    if isAlive?
+      moveDown
+
+      if out?
+        die
+      end
+    end
+  end
+
 end
