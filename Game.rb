@@ -30,13 +30,14 @@ class Game< Gosu::Window
 
     StartBlocks()
 
-    Enemys=new EnemyHandle()
+    @enemys=EnemyHandle.new()
 
-    @player_shoot = nil
-    @enemy_shoot = nil
+    @player_shoot = Shoot.new(nil,false)
+    @enemy_shoot = EnemyShoot.new(nil,false)
     @soundtrack=Gosu::Song.new("assets/audios/soundtrack.ogg")
     @soundtrack.volume=0.2
     @soundtrack.play(true)
+    @global_collision=GlobalCollision.new(@enemys,@player,@enemy_shoot,@player_shoot,@blocks)
 
   end
 
@@ -44,14 +45,14 @@ class Game< Gosu::Window
 
   def update
     unless @tela_inicial || @gameover
-      Shoot_Enemy_Collision()
+      @global_collision.Shoot_to_Enemy
 
       Shoot_Block_Collision()
 
       Enemy_Shoot_Block_Collision()
       Enemy_Shoot_Player_Collision()
 
-      Move_Enemys()
+      @enemys.Move_Enemys()
 
       Move_Player_Shoot()
 
@@ -59,7 +60,7 @@ class Game< Gosu::Window
 
       Player_Controls()
 
-      Enemy_Attack()
+      @enemy_shoot=@enemys.Enemy_Attack(@enemy_shoot)
     end
     return unless @tela_inicial
     @move_down = 0
@@ -72,26 +73,15 @@ class Game< Gosu::Window
     unless @tela_inicial || @gameover
       #@background_image.draw(0,0,0)
       @player.draw
-
-      if @enemy != nil
-        @enemy.draw
-      end
-
-
-
       draw_Blocks()
-
-      draw_Enemys()
+      @enemys.draw_Enemys()
       @background.draw()
+      @player_shoot.draw
+      @enemy_shoot.draw
 
 
-      if @player_shoot != nil
-        @player_shoot.draw
-      end
-      if @enemy_shoot != nil
-        @enemy_shoot.draw
-      end
     end
+
     return unless @tela_inicial || @gameover
     if @tela_inicial
       @font.draw_text("SPACE INVADERS", 50, 170, 50, 2.0, 2.0, Gosu::Color::GREEN)
@@ -119,15 +109,7 @@ class Game< Gosu::Window
 
   private
 
-  def draw_Enemys
-    @k = 0
-    until @k >= @totalEnemys do
-      if @enemys[@k]!= nil
-        @enemys[@k].draw
-      end
-      @k += 1
-    end
-  end
+
 
   def draw_Blocks
     @j = 0
@@ -140,7 +122,7 @@ class Game< Gosu::Window
   end
 
   def Player_Controls
-    if button_down? Gosu::KbSpace and @player_shoot == nil
+    if button_down? Gosu::KbSpace and @player_shoot.isAlive?
       @player_shoot = Shoot.new(@player.Movement)
     end
 
@@ -153,92 +135,43 @@ class Game< Gosu::Window
   end
 
   def Move_Player_Shoot
-    if @player_shoot != nil
+    if @player_shoot.isAlive?
       @player_shoot.MoveTop
 
       if @player_shoot.out?
-        @player_shoot = nil
+        @player_shoot.die
       end
     end
   end
 
   def Move_Enemy_Shoot()
-    if @enemy_shoot != nil
+    if @enemy_shoot.isAlive?
       @enemy_shoot.MoveDown
 
       if @enemy_shoot.out?
-        @enemy_shoot = nil
+        @enemy_shoot.die
       end
     end
   end
 
 
-  def Move_Enemys
-    @num_enemys = 0
 
-    if (@move_left >= 100 && @move_down2 >= 21)
-      @move_left = 0
-      @move_right = 0
-      @move_down = 0
-      @move_down2 = 0
-    end
-
-    if (@move_left >= 100 && @move_down2 <= 20)
-      until @num_enemys >= @totalEnemys do
-        if(@enemys[@num_enemys]) != nil
-          @enemys[@num_enemys].MoveDown
-        end
-        @num_enemys += 1
-      end
-      @move_down2 += 1
-    end
-
-    if @move_right < 100
-      until @num_enemys >= @totalEnemys do
-        if(@enemys[@num_enemys]) != nil
-          @enemys[@num_enemys].MoveRight
-        end
-        @num_enemys += 1
-      end
-      @move_right += 1
-    end
-
-    if @move_right >= 100 && @move_down <= 20
-      until @num_enemys >= @totalEnemys do
-        if(@enemys[@num_enemys]) != nil
-          @enemys[@num_enemys].MoveDown
-        end
-          @num_enemys += 1
-      end
-      @move_down += 1
-    end
-
-    if @move_right >= 20 && @move_down >= 21
-      until @num_enemys >= @totalEnemys do
-        if(@enemys[@num_enemys]) != nil
-          @enemys[@num_enemys].MoveLeft
-        end
-        @num_enemys += 1
-      end
-      @move_left += 1
-    end
-  end
   def Enemy_Shoot_Block_Collision()
     @num_blocks = 0
     until @num_blocks > @totalBlocks do
-      if @enemy_shoot != nil and @blocks[@num_blocks] != nil
+      if @enemy_shoot.isAlive? and @blocks[@num_blocks] != nil
         if collision?(@enemy_shoot, @blocks[@num_blocks])
           @blocks[@num_blocks] = nil
-          @enemy_shoot = nil
+          @enemy_shoot.die
         end
       end
       @num_blocks += 1
     end
   end
   def Enemy_Shoot_Player_Collision()
-    if @enemy_shoot != nil
+    if @enemy_shoot.isAlive?
       if collision?(@enemy_shoot,@player)
-        @enemy_shoot=nil
+        @enemy_shoot.die
         @gameover = true
       end
     end
@@ -246,30 +179,17 @@ class Game< Gosu::Window
   def Shoot_Block_Collision
     @num_blocks = 0
     until @num_blocks > @totalBlocks do
-      if @player_shoot != nil and @blocks[@num_blocks] != nil
+      if @player_shoot.isAlive? and @blocks[@num_blocks] != nil
         if collision?(@player_shoot, @blocks[@num_blocks])
           @blocks[@num_blocks] = nil
-          @player_shoot = nil
+          @player_shoot.die
         end
       end
       @num_blocks += 1
     end
   end
 
-  def Shoot_Enemy_Collision
-    @num_enemys=0
 
-    until @num_enemys > @totalEnemys
-      if @player_shoot != nil and @enemys[@num_enemys] != nil
-
-        if collision?(@player_shoot, @enemys[@num_enemys])
-          @enemys[@num_enemys] = nil
-          @player_shoot = nil
-        end
-    end
-    @num_enemys+=1
-    end
-  end
 
   def StartBlocks
     @blocks = Array.new(20)

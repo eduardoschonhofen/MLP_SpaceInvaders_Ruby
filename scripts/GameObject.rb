@@ -40,7 +40,9 @@ class GameObject
     @Movement.top
   end
   def draw
+    if isAlive?
     @Texture.draw(@Movement.x,@Movement.y)
+      end
   end
 
   def out?

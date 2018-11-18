@@ -8,11 +8,14 @@ module Collision
    end
 
    def collision?(a, b)
-     if simple_collision?(a, b) or simple_collision?(b, a)
+     if (simple_collision?(a, b) or simple_collision?(b, a))
        return true
      else
        return false
      end
-   end
+   rescue
+     return false
+     end
+
 
 end

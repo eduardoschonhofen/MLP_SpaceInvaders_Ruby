@@ -5,7 +5,8 @@ require_relative 'GameObject'
 class Shoot < GameObject
   attr_accessor :Movement
 
-  def initialize(movement)
+  def initialize(movement,alive=true)
+    if alive
     @texturePath='./assets/textures/shoot.png'
     @scaleX,@scaleY=0.1,0.1
     @speed=6
@@ -13,6 +14,9 @@ class Shoot < GameObject
     super(movement.x+15  ,movement.y)
     loadSound()
     playSound()
+    else
+      @alive=alive
+      end
   end
 
 
