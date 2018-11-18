@@ -112,11 +112,27 @@ class FunctionalGame< Gosu::Window
     @player=playerAction[0].call(@player)
     @player_shoot=playerAction[1].call(@player_shoot,@player)
     end
+
+    if (!@enemy_shoot.alive)
+      @enemy_shoot = newShootEnemy()
+    else
+      @enemy_shoot = movePlayerShoot(@enemy_shoot)
+    end
+end
+
+  def newShootEnemy()
+    shootingEnemy = @enemys.sample
+    while(!shootingEnemy.alive)
+      shootingEnemy = @enemys.sample
+    end
+
+    return Shoot.new(shootingEnemy.posx, shootingEnemy.posy, true, 6)
   end
 
   def updatePlayer(player)
 
   end
+
   def button_down(id)
     if id==Gosu::KbEscape
       close
@@ -139,13 +155,17 @@ def moveShoot(shoot)
   shoot = lambda do |obj|
     if obj.alive
       tiro=Shoot.new(obj.posx,obj.posy+obj.direction,true,obj.direction)
+
+      if tiro.posy < 0 or tiro.posy > Definitions::RES_HEIGHT
+        tiro.alive = false
+      end
+
       return tiro
     end
-     return obj
-  end
-  end
 
-
+    return obj
+  end
+end
 
   def player_Controls(player_shoot)
     if button_down? Gosu::KbSpace and !player_shoot.alive
@@ -256,7 +276,8 @@ def moveShoot(shoot)
     @textureBackground.draw(1,1,0,1,1)
     drawScreen.call(@texturePlayer,@player,0,0.1,0.1)
 
-    @texturePlayerShoot.draw(@player_shoot.posx,@player_shoot.posy,1,0.1,0.1)
+    drawScreen.call(@texturePlayerShoot,@player_shoot,1,0.1,0.1)
+    drawScreen.call(@textureEnemyShoot,@enemy_shoot,1,0.1,0.1)
 
   end
 
