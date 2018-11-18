@@ -107,8 +107,7 @@ class FunctionalGame< Gosu::Window
   def update
     @enemys=updateEnemys(@enemys)
     playerAction=player_Controls(@player_shoot)
-    @player_shoot.posy=@player_shoot.posy+@player_shoot.direction
-
+    @player_shoot=movePlayerShoot(@player_shoot)
     if playerAction != nil
     @player=playerAction[0].call(@player)
     @player_shoot=playerAction[1].call(@player_shoot,@player)
@@ -131,7 +130,20 @@ class FunctionalGame< Gosu::Window
 
   private
 
+  def movePlayerShoot(player_shoot)
+    moveShoot(player_shoot).call(player_shoot)
+  end
 
+
+def moveShoot(shoot)
+  shoot = lambda do |obj|
+    if obj.alive
+      tiro=Shoot.new(obj.posx,obj.posy+obj.direction,true,obj.direction)
+      return tiro
+    end
+     return obj
+  end
+  end
 
 
 
@@ -200,8 +212,6 @@ class FunctionalGame< Gosu::Window
 
     return enemys
 
-
-
   end
 
   def setRight
@@ -247,8 +257,6 @@ class FunctionalGame< Gosu::Window
     drawScreen.call(@texturePlayer,@player,0,0.1,0.1)
 
     @texturePlayerShoot.draw(@player_shoot.posx,@player_shoot.posy,1,0.1,0.1)
-
-
 
   end
 
