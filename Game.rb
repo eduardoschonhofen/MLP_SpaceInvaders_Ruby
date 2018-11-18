@@ -37,7 +37,7 @@ class Game< Gosu::Window
     @soundtrack=Gosu::Song.new("assets/audios/soundtrack.ogg")
     @soundtrack.volume=0.2
     @soundtrack.play(true)
-    @global_collision=GlobalCollision.new(@enemys,@player,@enemy_shoot,@player_shoot,@blocks)
+    @global_collision=GlobalCollision.new(@enemys,@player,@blocks)
 
   end
 
@@ -45,12 +45,12 @@ class Game< Gosu::Window
 
   def update
     unless @tela_inicial || @gameover
-      @global_collision.Shoot_to_Enemy
+      @global_collision.Shoot_to_Enemy(@player_shoot)
 
       Shoot_Block_Collision()
 
-      Enemy_Shoot_Block_Collision()
-      Enemy_Shoot_Player_Collision()
+    #  Enemy_Shoot_Block_Collision()
+     # Enemy_Shoot_Player_Collision()
 
       @enemys.Move_Enemys()
 
@@ -61,6 +61,7 @@ class Game< Gosu::Window
       Player_Controls()
 
       @enemy_shoot=@enemys.Enemy_Attack(@enemy_shoot)
+
     end
     return unless @tela_inicial
     @move_down = 0
@@ -78,6 +79,7 @@ class Game< Gosu::Window
       @background.draw()
       @player_shoot.draw
       @enemy_shoot.draw
+
 
 
     end
@@ -145,7 +147,7 @@ class Game< Gosu::Window
   end
 
   def Move_Enemy_Shoot()
-    if @enemy_shoot.isAlive?
+    if @enemy_shoot!=nil and @enemy_shoot.isAlive?
       @enemy_shoot.MoveDown
 
       if @enemy_shoot.out?

@@ -24,37 +24,39 @@ class EnemyHandle
 
 
   def Enemy_Attack(shoot)
-    if !shoot.isAlive?
+    if  !shoot.isAlive?
       enemy=@enemys.sample
-      while enemy==nil
+      while !enemy.isAlive?
         enemy=@enemys.sample
       end
       enemy_shoot=EnemyShoot.new(enemy.Movement)
       return enemy_shoot
     end
+    return shoot
   end
 
   def Move_Enemys
+    limiteEsquerda,limiteDireita=Definitions::RES_WIDTH,0
     for enemy in @enemys do
-      if enemy.isAlive?
-        limiteEsquerda=enemy;
-        break
+      if enemy.isAlive? and enemy.Movement.x < limiteEsquerda
+        limiteEsquerda=enemy.Movement.x;
+        end
+        if enemy.isAlive? and enemy.Movement.x > limiteDireita
+          limiteDireita=enemy.Movement.x;
       end
-    end
-    for enemy in @enemys.reverse()
-      if enemy.isAlive?
-        limiteDireita=enemy;
-        break
       end
-    end
 
 
-    if limiteEsquerda.Movement.x==0
+  p
+
+    if limiteEsquerda<=0
       puts("Limite Esquerda")
-      @movement=-1
-    else if limiteDireita.Movement.x== Definitions::RES_WIDTH
+      @movement=1
+      moveBaixo
+    else if limiteDireita+@enemys[1].Movement.width>= Definitions::RES_WIDTH
            puts("Limite Direita")
-           @movement=1
+           @movement=-1
+           moveBaixo
          end
     end
     if @movement==-1
@@ -64,13 +66,20 @@ class EnemyHandle
       end
 
   end
-
+  def moveBaixo
+    for enemy in @enemys
+      for i in 0..10
+      enemy.MoveDown
+      end
+      end
+  end
   def moveEsquerda
     for enemy in @enemys
       enemy.MoveLeft
     end
   end
   def moveDireita
+
     for enemy in @enemys
       enemy.MoveRight
     end
