@@ -107,6 +107,7 @@ class FunctionalGame< Gosu::Window
   def update
     @enemys=updateEnemys(@enemys)
     playerAction=player_Controls(@player_shoot)
+    @player_shoot.posy=@player_shoot.posy+@player_shoot.direction
 
     if playerAction != nil
     @player=playerAction[0].call(@player)
@@ -247,7 +248,7 @@ class FunctionalGame< Gosu::Window
 
     @texturePlayerShoot.draw(@player_shoot.posx,@player_shoot.posy,1,0.1,0.1)
 
-    @player_shoot.posy=@player_shoot.posy+@player_shoot.direction
+
 
   end
 
