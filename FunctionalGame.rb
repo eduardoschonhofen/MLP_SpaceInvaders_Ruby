@@ -9,6 +9,7 @@ require_relative 'scripts/Definitions'
 Enemy=Struct.new(:posx,:posy,:alive)
 Block=Struct.new(:posx,:posy,:alive)
 Shoot=Struct.new(:posx,:posy,:alive,:direction)
+Player=Struct.new(:posx,:posy,:alive)
 
 class FunctionalGame< Gosu::Window
 
@@ -30,6 +31,7 @@ class FunctionalGame< Gosu::Window
     @blocks=startBlocksArray()
     @player_shoot=startPlayerShoot()
     @enemy_shoot=startEnemyShoot()
+    @player=startPlayer()
 
   end
 
@@ -42,7 +44,6 @@ class FunctionalGame< Gosu::Window
     if i>=3
       return Array.new()
     end
-    puts("AAA")
     linha=geraLinha(enemys[0..10],0,i)
     proximaLinhas=posicionaInimigos(enemys[10...-1],i+1)
     return linha + proximaLinhas
@@ -97,7 +98,7 @@ class FunctionalGame< Gosu::Window
   end
 
   def startPlayer()
-    return Player.new()
+    return Player.new(Definitions::RES_WIDTH/2,Definitions::RES_HEIGHT-80,true)
   end
 
 
@@ -115,7 +116,7 @@ class FunctionalGame< Gosu::Window
 
   def draw
   drawScreen = lambda do |texture,obj,z,scaleX,scaleY|
-        if alive
+        if obj.alive
           texture.draw(obj.posx,obj.posy,z,scaleX,scaleY)
         end
     end
@@ -130,7 +131,7 @@ class FunctionalGame< Gosu::Window
 
     @textureBackground.draw(1,1,0,1,1)
 
-    #drawScreen.call(@texturePlayer,@player,0,1,1)
+    drawScreen.call(@texturePlayer,@player,0,0.1,0.1)
 
 
 
