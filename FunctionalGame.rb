@@ -78,11 +78,11 @@ class FunctionalGame< Gosu::Window
   end
 
   def geraBlocos(blocks,i)
-    blocks[0] = Block.new(100 + i*175, 400,true)
-    blocks[1] = Block.new(100 + i*175, 432,true)
-    blocks[2] = Block.new(132 + i*175, 400,true)
-    blocks[3] = Block.new(164 + i*175, 400,true)
-    blocks[4] = Block.new(164 + i*175, 432,true)
+    blocks[0] = Block.new(100 + i*175, 400,true,0,32,32)
+    blocks[1] = Block.new(100 + i*175, 432,true,0,32,32)
+    blocks[2] = Block.new(132 + i*175, 400,true,0,32,32)
+    blocks[3] = Block.new(164 + i*175, 400,true,0,32,32)
+    blocks[4] = Block.new(164 + i*175, 432,true,0,32,32)
     return blocks
   end
 
@@ -99,7 +99,7 @@ class FunctionalGame< Gosu::Window
   end
 
   def startPlayer()
-    return Player.new(Definitions::RES_WIDTH/2,Definitions::RES_HEIGHT-80,true,2)
+    return Player.new(Definitions::RES_WIDTH/2,Definitions::RES_HEIGHT-80,true,2,51,48)
   end
 
   def simple_collision?(a, b)
@@ -136,7 +136,30 @@ class FunctionalGame< Gosu::Window
       @enemy_shoot = movePlayerShoot(@enemy_shoot)
     end
 
+    if @enemy_shoot.alive
+      @blocks.each do |block|
+        if block.alive and collision?(block, @enemy_shoot)
+            block.alive = false
+            @enemy_shoot.alive = false
+        end
+      end
+
+      if @player.alive and collision?(@enemy_shoot, @player)
+        puts "acerto"
+        @player.alive = false
+        @enemy_shoot.alive = false
+      end
+
+    end
+
     if @player_shoot.alive
+      @blocks.each do |block|
+        if block.alive and collision?(block, @player_shoot)
+            block.alive = false
+            @player_shoot.alive = false
+        end
+      end
+
       @enemys.each do |enemy|
         if enemy.alive
           test_collision = lambda {|enemy,player| collision?(enemy,player)}
@@ -307,7 +330,6 @@ end
 
     @textureBackground.draw(1,1,0,1,1)
     drawScreen.call(@texturePlayer,@player,0,0.1,0.1)
-    puts "A"
     drawScreen.call(@texturePlayerShoot,@player_shoot,1,0.1,0.1)
     drawScreen.call(@textureEnemyShoot,@enemy_shoot,1,0.1,0.1)
 
