@@ -6,10 +6,10 @@ require_relative 'scripts/Definitions'
 
 
 
-Enemy=Struct.new(:posx,:posy,:alive,:speed)
-Block=Struct.new(:posx,:posy,:alive,:speed)
-Shoot=Struct.new(:posx,:posy,:alive,:direction)
-Player=Struct.new(:posx,:posy,:alive,:speed)
+Enemy=Struct.new(:posx,:posy,:alive,:speed,:width,:height)
+Block=Struct.new(:posx,:posy,:alive,:speed,:width,:height)
+Shoot=Struct.new(:posx,:posy,:alive,:direction,:width,:height)
+Player=Struct.new(:posx,:posy,:alive,:speed,:width,:height)
 
 class FunctionalGame< Gosu::Window
 
@@ -53,7 +53,7 @@ class FunctionalGame< Gosu::Window
     if i==10
       return Array.new()
     end
-    enemy=Enemy.new((i+1)*60,(linha+1)*75-50,true,0.5)
+    enemy=Enemy.new((i+1)*60,(linha+1)*75-50,true,0.5,38,32)
     proximo=geraLinha(enemys[1..-1],i+1,linha)
     proximo.push(enemy)
   end
@@ -91,10 +91,10 @@ class FunctionalGame< Gosu::Window
     blocks=posicionaBlocos(blocks,0)
   end
   def startPlayerShoot()
-      return Shoot.new(0,0,false,-1)
+      return Shoot.new(0,0,false,-1,22,22)
   end
   def startEnemyShoot()
-    return Shoot.new(0,0,false,1)
+    return Shoot.new(0,0,false,1,22,22)
 
   end
 
@@ -102,6 +102,23 @@ class FunctionalGame< Gosu::Window
     return Player.new(Definitions::RES_WIDTH/2,Definitions::RES_HEIGHT-80,true,2)
   end
 
+  def simple_collision?(a, b)
+    if (a.posx <= b.posx and (a.posx + a.width) > b.posx) and (a.posy <= b.posy and (a.posy + a.height) > b.posy)
+      return true
+    else
+      return false
+    end
+  end
+
+  def collision?(a, b)
+    if (simple_collision?(a, b) or simple_collision?(b, a))
+      return true
+    else
+      return false
+    end
+  rescue
+    return false
+    end
 
 
   def update
@@ -118,6 +135,15 @@ class FunctionalGame< Gosu::Window
     else
       @enemy_shoot = movePlayerShoot(@enemy_shoot)
     end
+
+    if @player_shoot.alive
+      @enemys.each do |enemy|
+        if enemy.alive and collision?(enemy, @player_shoot)
+          enemy.alive = false
+          @player_shoot.alive = false
+        end
+      end
+    end
 end
 
   def newShootEnemy()
@@ -126,7 +152,7 @@ end
       shootingEnemy = @enemys.sample
     end
 
-    return Shoot.new(shootingEnemy.posx, shootingEnemy.posy, true, 6)
+    return Shoot.new(shootingEnemy.posx, shootingEnemy.posy, true, 6,22,22)
   end
 
   def updatePlayer(player)
@@ -154,7 +180,7 @@ end
 def moveShoot(shoot)
   shoot = lambda do |obj|
     if obj.alive
-      tiro=Shoot.new(obj.posx,obj.posy+obj.direction,true,obj.direction)
+      tiro=Shoot.new(obj.posx,obj.posy+obj.direction,true,obj.direction,22,22)
 
       if tiro.posy < 0 or tiro.posy > Definitions::RES_HEIGHT
         tiro.alive = false
@@ -200,7 +226,7 @@ end
   def newShoot
     shoot = lambda do |obj2,obj|
       if obj.alive and !obj2.alive
-        tiro=Shoot.new(obj.posx+15,obj.posy,true,-6)
+        tiro=Shoot.new(obj.posx+15,obj.posy,true,-6,22,22)
         return tiro
       end
     end
