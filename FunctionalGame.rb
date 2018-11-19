@@ -138,9 +138,15 @@ class FunctionalGame< Gosu::Window
 
     if @player_shoot.alive
       @enemys.each do |enemy|
-        if enemy.alive and collision?(enemy, @player_shoot)
-          enemy.alive = false
-          @player_shoot.alive = false
+        if enemy.alive
+          test_collision = lambda {|enemy,player| collision?(enemy,player)}
+          test_collision_curry = test_collision.curry
+          test_collision_enemy = test_collision_curry[enemy]
+
+          if test_collision_enemy[@player_shoot]
+            enemy.alive = false
+            @player_shoot.alive = false
+          end
         end
       end
     end
