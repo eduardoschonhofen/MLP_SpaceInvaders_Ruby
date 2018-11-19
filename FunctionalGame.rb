@@ -78,11 +78,11 @@ class FunctionalGame< Gosu::Window
   end
 
   def geraBlocos(blocks,i)
-    blocks[0] = Block.new(100 + i*175, 400)
-    blocks[1] = Block.new(100 + i*175, 432)
-    blocks[2] = Block.new(132 + i*175, 400)
-    blocks[3] = Block.new(164 + i*175, 400)
-    blocks[4] = Block.new(164 + i*175, 432)
+    blocks[0] = Block.new(100 + i*175, 400,true)
+    blocks[1] = Block.new(100 + i*175, 432,true)
+    blocks[2] = Block.new(132 + i*175, 400,true)
+    blocks[3] = Block.new(164 + i*175, 400,true)
+    blocks[4] = Block.new(164 + i*175, 432,true)
     return blocks
   end
 
