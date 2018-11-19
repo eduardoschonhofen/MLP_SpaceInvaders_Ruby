@@ -307,7 +307,7 @@ end
 
     @textureBackground.draw(1,1,0,1,1)
     drawScreen.call(@texturePlayer,@player,0,0.1,0.1)
-
+    puts "A"
     drawScreen.call(@texturePlayerShoot,@player_shoot,1,0.1,0.1)
     drawScreen.call(@textureEnemyShoot,@enemy_shoot,1,0.1,0.1)
 
